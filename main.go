@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"go_api_foundation/handler"
 	"go_api_foundation/user"
 	"log"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -18,12 +19,20 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
+	// menghubungkan struct ke database
 	userRepository := user.NewRepository(db)
-	user := user.User{
-		Name: "Test Save",
-	}
 
-	userRepository.Save(user)
-	fmt.Println("User di tambahkan")
+	// memaping data dari input user untuk di masukan ke userRepository
+	userService := user.NewService(userRepository)
 
+	// mengambil data mentah dari client dan di convert dari json ke userService
+	userHandler := handler.NewUserHandler(userService)
+
+	router := gin.Default()
+
+	// grouping router
+	api := router.Group("/api/v1")
+
+	api.POST("/users", userHandler.RegisterUser)
+	router.Run()
 }
