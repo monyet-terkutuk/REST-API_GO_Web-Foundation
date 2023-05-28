@@ -1,6 +1,7 @@
 package main
 
 import (
+	"go_api_foundation/auth"
 	"go_api_foundation/handler"
 	"go_api_foundation/user"
 	"log"
@@ -25,8 +26,11 @@ func main() {
 	// memaping data dari input user untuk di masukan ke userRepository
 	userService := user.NewService(userRepository)
 
+	// panggil service auth
+	authService := auth.NewService()
+
 	// mengambil data mentah dari client dan di convert dari json ke userService
-	userHandler := handler.NewUserHandler(userService)
+	userHandler := handler.NewUserHandler(userService, authService)
 
 	router := gin.Default()
 
