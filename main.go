@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"go_api_foundation/auth"
+	"go_api_foundation/campaign"
 	"go_api_foundation/handler"
 	"go_api_foundation/helper"
 	"go_api_foundation/user"
@@ -26,6 +28,18 @@ func main() {
 
 	// menghubungkan struct ke database
 	userRepository := user.NewRepository(db)
+	campaignRepository := campaign.NewRepository(db)
+
+	// test
+	campaigns, err := campaignRepository.FindByUserID(1)
+
+	fmt.Println("debug")
+	fmt.Println("debug")
+	fmt.Println("debug")
+	fmt.Println(len(campaigns))
+	for _, campaign := range campaigns {
+		fmt.Println(campaign.Name)
+	}
 
 	// memaping data dari input user untuk di masukan ke userRepository
 	userService := user.NewService(userRepository)
