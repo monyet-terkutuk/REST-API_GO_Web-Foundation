@@ -31,7 +31,7 @@ func main() {
 	campaignRepository := campaign.NewRepository(db)
 
 	// test
-	campaigns, err := campaignRepository.FindByUserID(1)
+	campaigns, err := campaignRepository.FindByUserID(12)
 
 	fmt.Println("debug")
 	fmt.Println("debug")
@@ -39,6 +39,10 @@ func main() {
 	fmt.Println(len(campaigns))
 	for _, campaign := range campaigns {
 		fmt.Println(campaign.Name)
+		if len(campaign.CampaignImages) > 0 {
+			fmt.Println(campaign.CampaignImages[0].FileName)
+
+		}
 	}
 
 	// memaping data dari input user untuk di masukan ke userRepository
