@@ -30,23 +30,13 @@ func main() {
 	userRepository := user.NewRepository(db)
 	campaignRepository := campaign.NewRepository(db)
 
-	// test
-	campaigns, err := campaignRepository.FindByUserID(12)
-
-	fmt.Println("debug")
-	fmt.Println("debug")
-	fmt.Println("debug")
-	fmt.Println(len(campaigns))
-	for _, campaign := range campaigns {
-		fmt.Println(campaign.Name)
-		if len(campaign.CampaignImages) > 0 {
-			fmt.Println(campaign.CampaignImages[0].FileName)
-
-		}
-	}
-
 	// memaping data dari input user untuk di masukan ke userRepository
 	userService := user.NewService(userRepository)
+	campaignService := campaign.NewService(campaignRepository)
+
+	// test
+	campaigns, _ := campaignService.FindCampaigns(18)
+	fmt.Println(len(campaigns))
 
 	// panggil service auth
 	authService := auth.NewService()
