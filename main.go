@@ -42,6 +42,9 @@ func main() {
 
 	router := gin.Default()
 
+	// buat routing static untuk gambar
+	router.Static("/avatar", "./images/avatar")
+
 	// grouping router
 	api := router.Group("/api/v1")
 
