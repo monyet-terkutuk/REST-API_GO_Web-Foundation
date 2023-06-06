@@ -64,3 +64,8 @@ func (h *campaignHandler) GetCampaign(c *gin.Context) {
 	response := helper.APIResponse("Campaign detail", http.StatusOK, "success", campaign.FormatCampaignDetail(campaignDetail))
 	c.JSON(http.StatusOK, response)
 }
+
+// tangkap parameter dari user ke dalam input struct
+// ambil identitas user yg membuat dari JWT token
+// panggil service dengan parameter dari input struct dan buat slug
+// panggil func dari repositori di service untuk menambah campaign baru
