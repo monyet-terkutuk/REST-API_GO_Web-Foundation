@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"go_api_foundation/auth"
 	"go_api_foundation/campaign"
 	"go_api_foundation/handler"
@@ -34,15 +33,12 @@ func main() {
 	userService := user.NewService(userRepository)
 	campaignService := campaign.NewService(campaignRepository)
 
-	// test
-	campaigns, _ := campaignService.FindCampaigns(18)
-	fmt.Println(len(campaigns))
-
 	// panggil service auth
 	authService := auth.NewService()
 
 	// mengambil data mentah dari client dan di convert dari json ke userService
 	userHandler := handler.NewUserHandler(userService, authService)
+	campaignHandler := handler.NewCampaignHandler(campaignService)
 
 	router := gin.Default()
 
@@ -53,6 +49,7 @@ func main() {
 	api.POST("/sessions", userHandler.UserLogin)
 	api.POST("/email_checkers", userHandler.CheckEmailAvailability)
 	api.POST("/avatars", authMiddleaware(authService, userService), userHandler.UploadAvatar)
+	api.GET("/campaigns", campaignHandler.GetCampaigns)
 
 	router.Run()
 }
