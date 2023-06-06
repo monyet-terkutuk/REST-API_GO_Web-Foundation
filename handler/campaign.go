@@ -69,3 +69,12 @@ func (h *campaignHandler) GetCampaign(c *gin.Context) {
 // ambil identitas user yg membuat dari JWT token
 // panggil service dengan parameter dari input struct dan buat slug
 // panggil func dari repositori di service untuk menambah campaign baru
+
+func (h *campaignHandler) CreateCampaign(c *gin.Context) {
+	var input campaign.CreateCampaignInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		return nil, err
+	}
+}
