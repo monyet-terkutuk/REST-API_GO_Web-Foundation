@@ -172,6 +172,10 @@ func (h *campaignHandler) UploadImage(c *gin.Context) {
 		return
 	}
 
+	currentUser := c.MustGet("currentUser").(user.User)
+	input.User = currentUser
+	userId := currentUser.Id
+
 	file, err := c.FormFile("file")
 	if err != nil {
 		data := gin.H{"is_uploaded": false}
@@ -180,10 +184,6 @@ func (h *campaignHandler) UploadImage(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-
-	// seharusnya dari jwt
-	currentUser := c.MustGet("currentUser").(user.User)
-	userId := currentUser.Id
 
 	// nama path dan nama file
 	path := fmt.Sprintf("images/campaign/%d-%s", userId, file.Filename)

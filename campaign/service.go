@@ -92,6 +92,14 @@ func (s *service) UpdateCampaign(inputID GetCampaignDetailInput, inputData Creat
 }
 
 func (s *service) SaveCampaignImage(input SaveCampaignImageInput, fileLocation string) (CampaignImage, error) {
+	campaign, err := s.repository.FindByID(input.CampaignID)
+	if err != nil {
+		return CampaignImage{}, err
+	}
+
+	if campaign.UserID != input.User.Id {
+		return CampaignImage{}, errors.New("Not authorized to perform this action.")
+	}
 	// *cek apakah campaign image == true
 	isPrimary := 0
 	if input.IsPrimary {
