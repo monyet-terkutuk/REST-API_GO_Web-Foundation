@@ -141,3 +141,19 @@ func (h *campaignHandler) UpdateCampaign(c *gin.Context) {
 	response := helper.APIResponse("Success to update campaign", http.StatusOK, "success", campaign.FormatCampaign(updatedCampaign))
 	c.JSON(http.StatusOK, response)
 }
+
+/*
+- Handler :
+func{
+	tangkap input masukan ke struct
+	masukan image ke folder
+}
+- Service :
+func{
+	cek apakah ada 2 gambar yg in_primary = true
+	panggil SaveImage()
+}
+- Repository :
+1. SaveImage()/CreateImage()
+2. Update is_prymary()
+*/
