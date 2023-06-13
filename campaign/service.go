@@ -1,6 +1,7 @@
 package campaign
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/gosimple/slug"
@@ -71,6 +72,10 @@ func (s *service) UpdateCampaign(inputID GetCampaignDetailInput, inputData Creat
 	campaign, err := s.repository.FindByID(inputID.ID)
 	if err != nil {
 		return campaign, err
+	}
+
+	if campaign.UserID != inputData.User.Id {
+		return campaign, errors.New("Not authorized to perform this action.")
 	}
 
 	campaign.Name = inputData.Name
