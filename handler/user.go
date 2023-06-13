@@ -161,7 +161,7 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	// seharusnya dari jwt
+	// dari jwt
 	currentUser := c.MustGet("currentUser").(user.User)
 	userId := currentUser.Id
 

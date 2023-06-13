@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"go_api_foundation/campaign"
 	"go_api_foundation/helper"
 	"go_api_foundation/user"
@@ -157,3 +158,55 @@ func{
 1. SaveImage()/CreateImage()
 2. Update is_prymary()
 */
+
+func (h *campaignHandler) UploadImage(c *gin.Context) {
+	var input campaign.SaveCampaignImageInput
+
+	err := c.ShouldBind(input)
+	if err != nil {
+		response := helper.APIResponse("Failed to uppload campaign image", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload campaign image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	// seharusnya dari jwt
+	currentUser := c.MustGet("currentUser").(user.User)
+	userId := currentUser.Id
+
+	// nama path dan nama file
+	path := fmt.Sprintf("images/campaign/%d-%s", userId, file.Filename)
+
+	err = c.SaveUploadedFile(file, path)
+
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload campaign image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	_, err = h.service.SaveCampaignImage(input, path)
+
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload campaign image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	data := gin.H{"is_uploaded": true}
+	response := helper.APIResponse("Campaign image successfuly uploaded", http.StatusOK, "success", data)
+
+	c.JSON(http.StatusOK, response)
+}
