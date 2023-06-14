@@ -28,6 +28,7 @@ func main() {
 	// menghubungkan struct ke database
 	userRepository := user.NewRepository(db)
 	campaignRepository := campaign.NewRepository(db)
+	// transactionRepository := transaction.NewRepository(db)
 
 	// memaping data dari input user untuk di masukan ke userRepository
 	userService := user.NewService(userRepository)
