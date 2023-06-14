@@ -5,6 +5,7 @@ import (
 	"go_api_foundation/campaign"
 	"go_api_foundation/handler"
 	"go_api_foundation/helper"
+	"go_api_foundation/transaction"
 	"go_api_foundation/user"
 	"log"
 	"net/http"
@@ -28,11 +29,12 @@ func main() {
 	// menghubungkan struct ke database
 	userRepository := user.NewRepository(db)
 	campaignRepository := campaign.NewRepository(db)
-	// transactionRepository := transaction.NewRepository(db)
+	transactionRepository := transaction.NewRepository(db)
 
 	// memaping data dari input user untuk di masukan ke userRepository
 	userService := user.NewService(userRepository)
 	campaignService := campaign.NewService(campaignRepository)
+	transactionService := transaction.NewService(transactionRepository)
 
 	// panggil service auth
 	authService := auth.NewService()
@@ -40,6 +42,7 @@ func main() {
 	// mengambil data mentah dari client dan di convert dari json ke userService
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)
+	transactionHandler := handler.NewTransactionHandler(transactionService)
 
 	router := gin.Default()
 
@@ -58,6 +61,7 @@ func main() {
 	api.POST("/campaigns", authMiddleaware(authService, userService), campaignHandler.CreateCampaign)
 	api.PUT("/campaigns/:id", authMiddleaware(authService, userService), campaignHandler.UpdateCampaign)
 	api.POST("/campaign-images", authMiddleaware(authService, userService), campaignHandler.UploadImage)
+	api.GET("/campaign/:id/transactions", authMiddleaware(authService, userService), transactionHandler.GetCampaignTransactions)
 
 	router.Run()
 }

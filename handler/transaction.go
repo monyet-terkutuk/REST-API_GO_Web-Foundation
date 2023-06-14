@@ -12,7 +12,7 @@ type transactionHandler struct {
 	service transaction.Service
 }
 
-func NewTransaction(service transaction.Service) *transactionHandler {
+func NewTransactionHandler(service transaction.Service) *transactionHandler {
 	return &transactionHandler{service}
 }
 
