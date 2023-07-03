@@ -34,7 +34,7 @@ func main() {
 	// memaping data dari input user untuk di masukan ke userRepository
 	userService := user.NewService(userRepository)
 	campaignService := campaign.NewService(campaignRepository)
-	transactionService := transaction.NewService(transactionRepository)
+	transactionService := transaction.NewService(transactionRepository, campaignRepository)
 
 	// panggil service auth
 	authService := auth.NewService()
