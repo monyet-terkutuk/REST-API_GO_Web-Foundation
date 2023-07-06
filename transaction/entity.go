@@ -1,6 +1,7 @@
 package transaction
 
 import (
+	"go_api_foundation/campaign"
 	"go_api_foundation/user"
 	"time"
 )
@@ -13,6 +14,7 @@ type Transaction struct {
 	Status     string
 	Code       string
 	User       user.User
+	Campaign   campaign.Campaign
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }

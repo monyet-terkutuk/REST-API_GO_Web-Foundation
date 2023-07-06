@@ -17,6 +17,17 @@ func NewTransactionHandler(service transaction.Service) *transactionHandler {
 	return &transactionHandler{service}
 }
 
+// ------- Handler -----------
+// parameter dari uri
+// tangkap parameter dan mapping ke struct input
+// panggil service, struct di input menjadi paraameter nya
+
+// ------- Service ---------
+// Service memanggil repository dengan campaign id dari handler
+
+// ----- Repository -------
+// repo mencari  data trnasaction dari suatu campaign
+
 func (h *transactionHandler) GetCampaignTransactions(c *gin.Context) {
 	var input transaction.GetCampaignTransactionsInput
 
@@ -41,13 +52,7 @@ func (h *transactionHandler) GetCampaignTransactions(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-// ------- Handler -----------
-// parameter dari uri
-// tangkap parameter dan mapping ke struct input
-// panggil service, struct di input menjadi paraameter nya
-
-// ------- Service ---------
-// Service memanggil repository dengan campaign id dari handler
-
-// ----- Repository -------
-// repo mencari  data trnasaction dari suatu campaign
+// ambil data handler
+// ambil data user dari jwt/middleware
+// ke service lalu repository
+// di repo => ambil data transactions( sambil preload data campaign)
