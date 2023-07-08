@@ -5,6 +5,7 @@ CREATE TABLE transactions (
   amount INT,
   status VARCHAR(255),
   code VARCHAR(255),
+  payment_url VARCHAR(255),
   created_at DATETIME,
   updated_at DATETIME,
   FOREIGN KEY (campaign_id) REFERENCES campaigns(id),
