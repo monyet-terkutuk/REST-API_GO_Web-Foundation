@@ -69,3 +69,8 @@ func (h *transactionHandler) GetUserTransactions(c *gin.Context) {
 	response := helper.APIResponse("List user's transactions", http.StatusOK, "success", transaction.FormatUserTransactions(transactions))
 	c.JSON(http.StatusOK, response)
 }
+
+// user input jumlah amount
+// tangkap input di handler lalu mapping ke struct di input.go
+// di handler panggil service untuk add transaction, di service panggil sistem midtrans
+// di service panggil repositori untuk create new transaction
