@@ -36,17 +36,6 @@ func main() {
 	campaignService := campaign.NewService(campaignRepository)
 	transactionService := transaction.NewService(transactionRepository, campaignRepository)
 
-	// test service for new transaction
-	user, _ := userService.GetUserByID(33)
-
-	input := transaction.CreateTransactionInput{
-		CampaignID: 1,
-		Amount:     1000,
-		User:       user,
-	}
-
-	transactionService.CreateTransaction(input)
-
 	// panggil service auth
 	authService := auth.NewService()
 
