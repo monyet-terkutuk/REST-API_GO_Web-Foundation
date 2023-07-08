@@ -5,6 +5,7 @@ import (
 	"go_api_foundation/campaign"
 	"go_api_foundation/handler"
 	"go_api_foundation/helper"
+	"go_api_foundation/payment"
 	"go_api_foundation/transaction"
 	"go_api_foundation/user"
 	"log"
@@ -34,7 +35,8 @@ func main() {
 	// memaping data dari input user untuk di masukan ke userRepository
 	userService := user.NewService(userRepository)
 	campaignService := campaign.NewService(campaignRepository)
-	transactionService := transaction.NewService(transactionRepository, campaignRepository)
+	paymentService := payment.NewService()
+	transactionService := transaction.NewService(transactionRepository, campaignRepository, paymentService)
 
 	// panggil service auth
 	authService := auth.NewService()
