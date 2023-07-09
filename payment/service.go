@@ -1,6 +1,7 @@
 package payment
 
 import (
+	"go_api_foundation/transaction"
 	"go_api_foundation/user"
 	"strconv"
 
@@ -11,6 +12,7 @@ type service struct{}
 
 type Service interface {
 	GetPaymentURL(transaction Transaction, user user.User) (string, error)
+	ProcessPayment(input transaction.TransactionNotificationInput) error
 }
 
 func NewService() *service {
@@ -45,4 +47,8 @@ func (s *service) GetPaymentURL(transaction Transaction, user user.User) (string
 
 	return resp.RedirectURL, nil
 
+}
+
+func (s *service) ProcessPayment(input transaction.TransactionNotificationInput) error {
+	transaction_id, _ := strconv.Atoi(input.OrderID)
 }
