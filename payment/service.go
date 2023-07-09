@@ -23,11 +23,11 @@ func (s *service) GetPaymentURL(transaction Transaction, user user.User) (string
 	midclient.ClientKey = ""
 	midclient.APIEnvType = midtrans.Sandbox
 
-	coreGateway := midtrans.CoreGateway{
+	snapGateway := midtrans.SnapGateway{
 		Client: midclient,
 	}
 
-	chargeReq := &midtrans.ChargeReq{
+	snapReq := &midtrans.SnapReq{
 		CustomerDetail: &midtrans.CustDetail{
 			Email: user.Email,
 			FName: user.Name,
@@ -38,11 +38,11 @@ func (s *service) GetPaymentURL(transaction Transaction, user user.User) (string
 		},
 	}
 
-	resp, err := coreGateway.Charge(chargeReq)
+	resp, err := snapGateway.GetToken(snapReq)
 	if err != nil {
 		return "", err
 	}
 
-	return resp.ReURL, nil
+	return resp.RedirectURL, nil
 
 }
