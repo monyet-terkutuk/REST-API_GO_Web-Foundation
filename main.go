@@ -35,7 +35,7 @@ func main() {
 	// memaping data dari input user untuk di masukan ke userRepository
 	userService := user.NewService(userRepository)
 	campaignService := campaign.NewService(campaignRepository)
-	paymentService := payment.NewService(transactionRepository)
+	paymentService := payment.NewService(transactionRepository, campaignRepository)
 	transactionService := transaction.NewService(transactionRepository, campaignRepository, paymentService)
 
 	// panggil service auth
@@ -44,7 +44,7 @@ func main() {
 	// mengambil data mentah dari client dan di convert dari json ke userService
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)
-	transactionHandler := handler.NewTransactionHandler(transactionService)
+	transactionHandler := handler.NewTransactionHandler(transactionService, paymentService)
 
 	router := gin.Default()
 
@@ -69,6 +69,7 @@ func main() {
 	api.GET("/campaign/:id/transactions", authMiddleaware(authService, userService), transactionHandler.GetCampaignTransactions)
 	api.GET("/transactions", authMiddleaware(authService, userService), transactionHandler.GetUserTransactions)
 	api.POST("/transactions", authMiddleaware(authService, userService), transactionHandler.CreateTransaction)
+	api.POST("/transactions/notification", transactionHandler.GetNotification)
 
 	router.Run()
 }

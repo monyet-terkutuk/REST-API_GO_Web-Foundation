@@ -1,6 +1,7 @@
 package payment
 
 import (
+	"go_api_foundation/campaign"
 	"go_api_foundation/transaction"
 	"go_api_foundation/user"
 	"strconv"
@@ -10,6 +11,7 @@ import (
 
 type service struct {
 	transactionRepository transaction.Repository
+	campaignRepository    campaign.Repository
 }
 
 type Service interface {
@@ -17,8 +19,8 @@ type Service interface {
 	ProcessPayment(input transaction.TransactionNotificationInput) error
 }
 
-func NewService(transactionRepository transaction.Repository) *service {
-	return &service{transactionRepository}
+func NewService(transactionRepository transaction.Repository, campaignRepository campaign.Repository) *service {
+	return &service{transactionRepository, campaignRepository}
 }
 
 func (s *service) GetPaymentURL(transaction Transaction, user user.User) (string, error) {
@@ -51,7 +53,7 @@ func (s *service) GetPaymentURL(transaction Transaction, user user.User) (string
 
 }
 
-func (s *service) ProcessPayment(input transaction.TransactionNotificationInput) (Transaction,error) {
+func (s *service) ProcessPayment(input transaction.TransactionNotificationInput) error {
 	transaction_id, _ := strconv.Atoi(input.OrderID)
 
 	transaction, err := s.transactionRepository.GetByID(transaction_id)
@@ -67,12 +69,29 @@ func (s *service) ProcessPayment(input transaction.TransactionNotificationInput)
 		transaction.Status = "paid"
 	}
 
-	if input.TransactionStatus == "deny" || input.TransactionStatus == "expire" || input.TransactionStatus == "cancel"{\
+	if input.TransactionStatus == "deny" || input.TransactionStatus == "expire" || input.TransactionStatus == "cancel" {
 		transaction.Status = "cancelled"
 	}
 
-	updatedTransaction,err := s.transaction.Repository.Update(transaction)
+	updatedTransaction, err := s.transaction.Repository.Update(transaction)
 	if err != nil {
 		return err
 	}
+
+	campaign, err := s.campaignRepository.FindByID(updatedTransaction.CampaignID)
+	if err != nil {
+		return err
+	}
+
+	if updatedTransaction.Status == "paid" {
+		campaign.BackerCount = campaign.BackerCount + 1
+		campaign.CurrentAmount = campaign.CurrentAmount + updatedTransaction.Amount
+
+		_, err := s.campaignRepository.Update(campaign)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
