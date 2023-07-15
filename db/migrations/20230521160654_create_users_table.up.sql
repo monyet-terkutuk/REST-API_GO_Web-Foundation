@@ -10,3 +10,5 @@ CREATE TABLE users (
   created_at DATETIME,
   updated_at DATETIME
 );
+
+-- migrate -path db/migrations -database "mysql://root:@tcp(localhost:3306)/go_foundation" down

@@ -94,13 +94,9 @@ func (s *service) ProcessPayment(input TransactionNotificationInput) error {
 
 	if input.PaymentType == "credit_card" && input.TransactionStatus == "capture" && input.FraudStatus == "accept" {
 		transaction.Status = "paid"
-	}
-
-	if input.TransactionStatus == "settlement" {
+	} else if input.TransactionStatus == "settlement" {
 		transaction.Status = "paid"
-	}
-
-	if input.TransactionStatus == "deny" || input.TransactionStatus == "expire" || input.TransactionStatus == "cancel" {
+	} else if input.TransactionStatus == "deny" || input.TransactionStatus == "expire" || input.TransactionStatus == "cancel" {
 		transaction.Status = "cancelled"
 	}
 

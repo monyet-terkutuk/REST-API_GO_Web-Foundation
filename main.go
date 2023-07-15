@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"gorm.io/driver/mysql"
@@ -48,6 +49,9 @@ func main() {
 
 	router := gin.Default()
 
+	// set cors
+	router.Use(cors.Default())
+
 	// buat routing static untuk gambar
 	router.Static("/avatar", "./images/avatar")
 
@@ -59,6 +63,7 @@ func main() {
 	api.POST("/sessions", userHandler.UserLogin)
 	api.POST("/email_checkers", userHandler.CheckEmailAvailability)
 	api.POST("/avatars", authMiddleaware(authService, userService), userHandler.UploadAvatar)
+	api.GET("/users/fetch", authMiddleaware(authService, userService), userHandler.FetchUser)
 	// campaign endpoint
 	api.GET("/campaigns", campaignHandler.GetCampaigns)
 	api.GET("/campaigns/:id", campaignHandler.GetCampaign)
